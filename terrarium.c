@@ -17,12 +17,7 @@
 #define PLEINE_ECH 1024   // convertisseur 10 bits.  pleine echelle = 2^10 = 1024
 #define Resolution 125    // resolution de 125 mV/C°
 
-
-int i = 0;
-void DelayHalfSecond(void);
-
 void Check_Buttons(int);
-
 void Set_LEDs(int);
 void Set_LED_22();
 void Set_LED_26();
@@ -67,10 +62,8 @@ int main()
       tension = (VREF_plus - VREF_moins)*ValeurADC / PLEINE_ECH;
       temp = ((tension * 1000)/Resolution)+10;
       
-      __delay_ms(500);
-      
       if (temp > tempREF){
-          RD1=0;
+          RD1 = 0;
           RD0 = 1;
       }
       if (temp < tempREF){
@@ -81,6 +74,8 @@ int main()
           RD1=0;
           RD0=0;
       }
+      
+      __delay_ms(1000);
     }
 }
 void Check_Buttons(tempREF){
