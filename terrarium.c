@@ -43,6 +43,7 @@ int main()
   
     float temp = 0.0f;
     int tempREF = 26;
+    int cpt = 0;
   
     unsigned long ValeurADC = 0L;
     float tension=0.0f;
@@ -55,7 +56,7 @@ int main()
         Set_LEDs(tempREF);
         if(RC0 == 1 && RC1 == 0)   //If the Plus Button is pressed
         {
-            __delay_ms(100);    //Switch Debounce
+//            __delay_ms(100);    //Switch Debounce
             if(RC0 == 1 && RC1 == 0)//If the switch is still pressed
             {
                 if(RC0 == 1 && tempREF != 30){
@@ -66,7 +67,7 @@ int main()
         }
         if(RC1 == 1 && RC0 == 0)   //If the Minus Button is pressed
         {
-            __delay_ms(100);    //Switch Debounce
+//            __delay_ms(100);    //Switch Debounce
             if(RC1 == 1 && RC0 == 0)//If the switch is still pressed
             {
                 if (RC1 == 1 && tempREF != 22){
@@ -75,28 +76,31 @@ int main()
                }
             }
         }
-      
-      ADCON0bits.GO_DONE = 1;
-      while(ADCON0bits.GO_DONE==1);
-      ValeurADC = ADRESH <<8;
-      ValeurADC += ADRESL;
-      tension = (VREF_plus - VREF_moins)*ValeurADC / PLEINE_ECH;
-      temp = ((tension * 1000)/Resolution)+10;
-      
-      if (temp > tempREF){
-          RD1 = 0;
-          RD0 = 1;
-      }
-      if (temp < tempREF){
-          RD1=1;
-          RD0 = 0;
-      }
-      if(temp == tempREF){
-          RD1=0;
-          RD0=0;
-      }
-      
-      __delay_ms(1000);
+        if(cpt ==20){
+          cpt = 0;
+          ADCON0bits.GO_DONE = 1;
+          while(ADCON0bits.GO_DONE==1);
+          ValeurADC = ADRESH <<8;
+          ValeurADC += ADRESL;
+          tension = (VREF_plus - VREF_moins)*ValeurADC / PLEINE_ECH;
+          temp = ((tension * 1000)/Resolution)+10;
+
+          if (temp > tempREF){
+              RD1 = 0;
+              RD0 = 1;
+          }
+          if (temp < tempREF){
+              RD1=1;
+              RD0 = 0;
+          }
+          if(temp == tempREF){
+              RD1=0;
+              RD0=0;
+          }
+          
+        }
+//        __delay_ms(5000);
+        cpt++;
     }
 }
 void Set_LEDs(tempREF){
